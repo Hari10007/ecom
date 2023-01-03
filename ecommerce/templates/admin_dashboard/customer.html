@@ -1,0 +1,123 @@
+{% extends 'admin_dashboard/main.html' %}
+{% block title %}Customer{% endblock %}
+
+{% block content %}
+    <div id="page-content-wrapper">
+        {% with title="Customers List" %}
+            {% include "admin_dashboard/nav_bar.html" %}
+        {% endwith %}
+
+        <div class="container-fluid px-4">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="container-fluid p-0">
+                        <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert" >
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            </button>
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %} 
+            <div class="row my-4">
+                <div class="col-md-6">
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search customer" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col">
+                    <table class="table bg-white rounded shadow-sm  table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" width="50">#</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone Number</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Is Active</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        {% for customer in customers%}
+                            <div class="modal fade" id="staticBackdrop{{ customer.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{% url 'customer_block' customer.id %}" method="POST">
+                                            {% csrf_token %}
+                                            {% if customer.is_active %}
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="staticBackdropLabel">Block User</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Are you sure you want to block this user?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-danger">Block</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                </div>
+                                            {% else %}
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="staticBackdropLabel">UnBlock User</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Are you sure you want to unblock this user?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-success">UnBlock</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                </div>
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ customer.username}}</td>
+                                    <td>{{ customer.email}}</td>
+                                    <td>{{ customer.phone_number}}</td>
+                                    <td>{{ customer.date_joined}}</td>
+                                    {% if customer.is_active %}
+                                        <td>Active</td>
+                                        <td><a data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ customer.id }}"><i class="fa fa-lock" style="font-size:24px;color:red"></i></a></td>
+                                    {% else %}
+                                        <td>Inactive</td>
+                                        <td><a data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ customer.id }}"><i class="fa fa-unlock" style="font-size:24px;color:green"></i></a></td>
+                                    {% endif %}
+                                </tr>
+                                {% empty %}
+                                    <tr class="text-center">
+                                        <td colspan="7">There are no Record Found!</td>
+                                    </tr>
+                            
+                            </tbody>
+                        {% endfor%}
+                    </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {% if customers.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page={{ customers.previous_page_number }}">Previous</a></li>
+                            {% endif %}
+                            {% for i in customers.paginator.page_range %}
+                                {% if customers.number == i %}
+                                    <li class="page-item active "><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if customers.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ customers.next_page_number }}">Next</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

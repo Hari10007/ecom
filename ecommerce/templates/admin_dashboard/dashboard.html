@@ -1,0 +1,131 @@
+{% extends 'admin_dashboard/main.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+    <div id="page-content-wrapper">
+        
+        
+        {% with title="Dashboard" %}
+            {% include "admin_dashboard/nav_bar.html" %}
+        {% endwith %}
+
+        <div class="container-fluid px-4">
+            <div class = "row">
+                <div class= 'col-md-7 shadow p-3 mb-5 mx-2'>
+                    <canvas id="myChart"></canvas>
+                </div>
+                <div class= 'col-md-4 shadow p-3 mb-5 mx-2 bg-body rounded'>
+                    <h3>New Customers</h3>
+                    <hr>
+                    <table class="table bg-white rounded shadow-sm  table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" width="50">#</th>
+                                <th scope="col">User</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        {% for user in users %}
+                            <tbody>
+                                <tr>
+                                    <th scope="row">{{ forloop.counter  }}</th>
+                                    <td>{{ user.username}}</td>
+                                    <td>
+                                        {% if user.is_active %}
+                                            <span class="p-1 mb-2 bg-primary text-white rounded">Active</span>
+                                        {% else %}
+                                            <span class="p-1 mb-2 bg-danger text-white rounded">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                    <tr class="text-center">
+                                        <td colspan="8">There are no Record Found!</td>
+                                    </tr>
+                            </tbody>
+                        {% endfor%}
+                    </table>
+
+                </div>
+            </div>
+            
+            <div class = "row">
+                <div class= 'col-md-12 shadow p-3 mb-5 bg-body rounded'>
+                    <h3>Recent Orders </h3>
+                    <hr>
+                    <table class="table bg-white rounded shadow-sm  table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" width="50">#</th>
+                                <th scope="col">Products</th>
+                                <th scope="col">User</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Payment Method</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        {% for order in orders %}
+                            <tbody>
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>
+                                        {% for item in order.order_items.all %}
+                                            {{ item.product.name }} ,
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ order.user.username }}</td>
+                                    <td>{{ order.grand_total}}</td>
+                                    <td>{{ order.payment_method}}</td>
+                                    <td>
+                                        {% if order.status == "Confirmed" %}
+                                            <span class="p-1 mb-2 bg-primary text-white rounded">{{ order.status }}</span>
+                                        {% elif order.status == "Out For Shipping" %}
+                                            <span class="p-1 mb-2 bg-warning text-dark rounded">{{ order.status }}</span>
+                                        {% else %}
+                                            <span class="p-1 mb-2 bg-success text-white rounded">{{ order.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                    <tr class="text-center">
+                                        <td colspan="8">There are no Record Found!</td>
+                                    </tr>
+                            </tbody>
+                        {% endfor%}
+                    </table>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('myChart');
+        const labels = {{ months|safe }}
+      
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Orders By Month',
+              data: {{total_orders}},
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      </script>
+{% endblock scripts %}

@@ -1,0 +1,29 @@
+{% for product in products %}
+    <div class="col-lg-3 col-sm-6 p-0">
+        <div class="card product-men p-3">
+            <div class="men-thumb-item">
+                <img src="{{product.image.url}}" alt="img" class="card-img-top">
+                {% if product.available %}
+                    <div class="men-cart-pro">
+                        <div class="inner-men-cart-pro">
+                            <a href="{%  url 'product_view' product.slug %}" class="link-product-add-cart">Quick View</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <span class="px-2 position-absolute">out of stock</span>
+                {% endif %}
+            </div>
+            <!-- card body -->
+            <div class="card-body  py-3 px-2">
+                <h5 class="card-title text-capitalize">{{product.name}}</h5>
+                <div class="card-text d-flex justify-content-center">
+                    <p class="text-dark font-weight-bold">${{product.price}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <div class="d-flex justify-content-center">
+        <h5>Sorry no products Found!</h5>
+    </div>
+{% endfor %}

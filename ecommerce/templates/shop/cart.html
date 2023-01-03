@@ -1,0 +1,119 @@
+{% extends 'shop/main.html' %}
+{% load static %}
+{% block title %}Cart{% endblock %}
+
+
+{% block content%}
+    <!-- inner banner -->
+	<div class="ibanner_w3 pt-sm-5 pt-3">
+		<h4 class="head_agileinfo text-center text-capitalize text-center pt-5">
+			<span>f</span>ashion
+			<span>h</span>ub</h4>
+	</div>
+	<!-- //inner banner -->
+    <!-- breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{%  url 'home' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Cart</li>
+        </ol>
+    </nav>
+    <!-- //breadcrumbs -->
+    <!--checkout-->
+    <section class="checkout_wthree py-sm-5 py-3">
+        <div class="container">
+            {% if not cart_items %}
+                <h2 class="text-center">Your shopping cart is empty</h2>
+            {% else %}
+                <div class="check_w3ls">
+                    <div class="d-sm-flex justify-content-between mb-4">
+                        <h4>Review your cart
+                        </h4>
+                        <h4 class="mt-sm-0 mt-3">Your shopping cart contains:
+                            <span>{{ cart_items.count }} Products</span>
+                        </h4>
+                    </div>
+                    <div class="checkout-right">
+                        <table class="timetable_sub">
+                            <thead>
+                                <tr>
+                                    <th>SL No.</th>
+                                    <th>Product</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cart_item in cart_items %}
+                                    <tr class="rem1 product-data">
+                                        <td class="invert">{{ forloop.counter }}</td>
+
+                                        <td class="invert-image">
+                                            <a href="{%  url 'product_view' cart_item.product.slug %}">
+                                                <img src="{{cart_item.product.image.url}}" alt=" " class="img-responsive" style="width: 20%;">
+                                            </a>
+                                        </td>
+
+                                        <td class="invert">
+                                            {{cart_item.product.name}}
+                                            <br>
+                                            <h5>Size:<span class="p-1 mb-1 mt-2 bg-primary text-white rounded">{{cart_item.name }}</span></h5>
+                                        </td>
+                                        
+                                        <td class="invert">
+                                            <div class="quantity">
+                                                <div class="quantity-select">
+                                                    <button data-product = {{ cart_item.product.id }} class="entry value-minus update-item" data-action="sub">&nbsp;</button>
+                                                    <div class="entry value">
+                                                        <span id = "quantity-{{ cart_item.product.id }}">{{ cart_item.quantity }}</span>
+                                                    </div>
+                                                    <button data-product = {{ cart_item.product.id }} class="entry value-plus update-item" data-action="add">&nbsp;</button>
+                                                    
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td class="invert" id = "subtotal-{{ cart_item.product.id }}">{{cart_item.sub_total}}</td>
+                                        
+                                        <td class="invert">
+                                            <a href="{% url 'remove_cart_item' cart_item.product.id  %}" class="btn btn-danger">Delete</a>
+                                        </td>
+                                    </tr>
+                                {% endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row checkout-left mt-5">
+                        <div class="col-md-4 checkout-left-basket">
+                            <ul>
+                                {% for item in cart_items %}
+                                <li>{{ item.product.name }}
+                                    <i>-</i>
+                                    <span id = "sub_total-{{ item.product.id }}">{{ item.sub_total }} </span>
+                                </li>
+                                {% endfor %}
+                                <li>Total
+                                    <i>-</i>
+                                    <span id = "total">${{total}}</span>
+                                </li>
+                            </ul>
+                            <a href="" class="btn btn-info">Continue Shopping</a>
+                        </div>
+                        
+                    </div>
+                    <div class="container">
+                        <div class="col-md-12 text-center">
+                            <a href="{% url 'checkout' %}" class="btn btn-outline-warning">Checkout</a>
+                        </div>
+                    </div>
+                </div>
+                
+            {% endif %}
+        </div>
+    </section>
+
+{% endblock%}

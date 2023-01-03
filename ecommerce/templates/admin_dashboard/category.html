@@ -1,0 +1,95 @@
+{% extends 'admin_dashboard/main.html' %}
+{% block title %}Category{% endblock %}
+
+{% block content %}
+    <div id="page-content-wrapper">
+        {% with title="Categories List" %}
+            {% include "admin_dashboard/nav_bar.html" %}
+        {% endwith %}
+
+        <div class="container-fluid px-4">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="container-fluid p-0">
+                        <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert" >
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            </button>
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %} 
+            <div class="row my-4">
+                <div class="col-md-6">
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search category" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+
+                <div class="col-md-6 d-flex flex-row-reverse">
+                    <a href="{% url 'category_create' %}" class="btn btn-outline-success">Add category</a>
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col">
+                    <table class="table bg-white rounded shadow-sm  table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" width="50">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Parent</th>
+                                <th scope="col">Slug</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Updated</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        {% for category in categories%}
+                            <tbody>
+                                <tr">
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ category.name}}</td>
+                                    <td>{{ category.parent}}</td>
+                                    <td>{{ category.slug}}</td>
+                                    <td>{{ category.created}}</td>
+                                    <td>{{ category.updated}}</td>
+                                    <td><a href="{% url 'category_update' category.id  %}"><i class="fa fa-edit" style="font-size:24px;color:green"></i></a></td>
+                                    <td>
+                                        <form method="POST" action="{% url 'category_delete' category.id %}">
+                                            {% csrf_token %}
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm" data-toggle="tooltip" title='Delete'>Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                    <tr class="text-center">
+                                        <td colspan="8">There are no Record Found!</td>
+                                    </tr>
+                            </tbody>
+                        {% endfor%}
+                    </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {% if categories.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page={{ categories.previous_page_number }}">Previous</a></li>
+                            {% endif %}
+                            {% for i in categories.paginator.page_range %}
+                                {% if categories.number == i %}
+                                    <li class="page-item active "><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if categories.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ categories.next_page_number }}">Next</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'admin_dashboard/main.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Product{% endblock %}
+
+
+{% block content %}
+    <div id="page-content-wrapper">
+        {% with title="Product Update" %}
+            {% include "admin_dashboard/nav_bar.html" %}
+        {% endwith %}
+
+        <div class="container-fluid px-4">
+            <form class="row g-2"  method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-6">
+                    {{ product_form.name|as_crispy_field}}
+                </div>
+                <div class="col-6">
+                    {{ product_form.slug|as_crispy_field}}
+                </div>
+                <div class="col-6">
+                    {{ product_form.category|as_crispy_field}}
+                </div>
+                
+                {{ product_form.image|as_crispy_field}}
+                {{ product_form.description|as_crispy_field}}
+                <div class="col-6">
+                    {{ product_form.price|as_crispy_field}}
+                </div>
+                {{ product_form.quantity|as_crispy_field}}
+                {{ product_form.available|as_crispy_field}}
+                <div class="col-12 d-flex justify-content-center mb-5">
+                    <button type="submit" class="btn btn-primary px-4 mt-12">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

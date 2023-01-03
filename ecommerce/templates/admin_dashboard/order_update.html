@@ -1,0 +1,77 @@
+{% extends 'admin_dashboard/main.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Sales Update{% endblock %}
+
+
+{% block content %}
+    <div id="page-content-wrapper">
+        {% with title="Sales Update" %}
+            {% include "admin_dashboard/nav_bar.html" %}
+        {% endwith %}
+
+        <div class="container-fluid px-4">
+            <div class="row">
+                <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-7 shadow p-3 mb-5 mx-2 bg-body rounded">
+                                <h4>Order Details</h4>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h6>Order Number: <span class="float-end">{{ order.order_number }}</span></h6>
+                                        <h6>Customer: <span class="float-end">{{ order.user.first_name }} {{ order.user.last_name }}</span></h6>
+                                        <hr>
+                                        {% for item in order.order_items.all %}
+                                            <div class="row">
+                                                <div class="col-md-3 text-center">
+                                                    <img src={{ item.product.image.url}} alt="ProductImage" height="100px" width="100px">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h6>{{ item.product.name }}</h6>
+                                                    <h6>Quantity:<span class="mx-5">{{ item.quantity }}</span></h6>
+                                                </div>
+                                                <div class="col-md-3 my-3">
+                                                    <h6>$ {{ item.sub_total }}</h6>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        <hr>
+                                        <h4 class="mt-2"> Total : <span class="float-end">$ {{ order.grand_total }}</span></h4>
+                                        <h6 class="mt-2"> Payment Mode : <span class="float-end">{{ order.payment_method }}</span></h6>
+                                        <h6 class="mt-2"> Order Status : 
+                                            {% if order.status == "Confirmed" %}
+                                                <span class="float-end p-1 mb-2 bg-primary text-white rounded">{{ order.status }}</span>
+                                            {% elif order.status == "Out For Shipping" %}
+                                                <span class="float-end p-1 mb-2 bg-warning text-dark rounded">{{ order.status }}</span>
+                                            {% elif order.status == "Cancel" %}
+                                                <span class="float-end p-1 mb-2 bg-danger text-white rounded">{{ order.status }}</span>
+                                            {% else %}
+                                                <span class="float-end p-1 mb-2 bg-success text-white rounded">{{ order.status }}</span>
+                                            {% endif %}
+                                        </h6>
+                                        {% if order.status != "Cancel" and order.status != "Refunded" %}
+                                            <form  method="POST">
+                                                {% csrf_token %}
+                                                {{ order_form.status|as_crispy_field}}
+                                                <button type="submit" class="btn btn-primary px-4 mt-12">Update</button>
+                                            </form>
+                                        {% elif order.status == "Cancel" %}
+                                            <a href="{% url 'refund' order.order_number %}" class="btn btn-outline-warning">Accept Refund</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 shadow p-3 mb-5 mx-2 bg-body rounded">
+                                <h4>Shipping Address</h4>
+                                <hr>
+                                    <strong>{{ order.address.address }}</strong>
+                                    <strong>{{ order.address.city }}</strong></br>
+                                    <strong>{{ order.address.postal_code }}</strong>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

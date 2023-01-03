@@ -1,0 +1,106 @@
+{% extends 'admin_dashboard/main.html' %}
+{% load static %}
+{% block title %}Sales{% endblock %}
+
+{% block content %}
+    <div id="page-content-wrapper">
+        {% with title="Sales List" %}
+            {% include "admin_dashboard/nav_bar.html" %}
+        {% endwith %}
+
+        <div class="container-fluid px-4">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="container-fluid p-0">
+                        <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert" >
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            </button>
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %} 
+            <div class="row my-4">
+                <div class="col-md-6">
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search order" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+
+                <div class="col-md-6 d-flex flex-row-reverse">
+                    <a href="{% url 'export_sales' %}" class="btn btn-outline-danger"><i class="fas fa-file-export"></i> Sales Report</a>
+                </div>
+
+
+            </div>
+            <div class="row my-1">
+                <div class="col">
+                    <table class="table bg-white rounded shadow-sm  table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" width="50">#</th>
+                                <th scope="col">Products</th>
+                                <th scope="col">User</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Payment Method</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        {% for order in orders %}
+                            <tbody>
+                                <tr  data-href="{% url 'order_update' order.pk %}" >
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>
+                                        {% for item in order.order_items.all %}
+                                            {{ item.product.name }} ,
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ order.user.username }}</td>
+                                    <td>{{ order.grand_total}}</td>
+                                    <td>{{ order.payment_method}}</td>
+                                    <td>
+                                        {% if order.status == "Confirmed" %}
+                                            <span class="p-1 mb-2 bg-primary text-white rounded">{{ order.status }}</span>
+                                        {% elif order.status == "Out For Shipping" %}
+                                            <span class="p-1 mb-2 bg-warning text-dark rounded">{{ order.status }}</span>
+                                        {% elif order.status == "Cancel" %}
+                                            <span class="p-1 mb-2 bg-danger text-white rounded">{{ order.status }}</span>
+                                        {% else %}
+                                            <span class="p-1 mb-2 bg-success text-white rounded">{{ order.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                    <tr class="text-center">
+                                        <td colspan="8">There are no Record Found!</td>
+                                    </tr>
+                            </tbody>
+                        {% endfor%}
+                    </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {% if orders.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page={{ orders.previous_page_number }}">Previous</a></li>
+                            {% endif %}
+                            {% for i in orders.paginator.page_range %}
+                                {% if orders.number == i %}
+                                    <li class="page-item active "><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if orders.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ orders.next_page_number }}">Next</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/admin/view.js' %}"></script>
+{% endblock scripts %}

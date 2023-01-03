@@ -1,0 +1,151 @@
+{% extends 'shop/main.html' %}
+{% load static %}
+{% block title %}Category{% endblock %}
+
+{% block content %}
+
+	<!-- inner banner -->
+	<div class="ibanner_w3 pt-sm-5 pt-3">
+		<h4 class="head_agileinfo text-center text-capitalize text-center pt-5">
+			<span>f</span>ashion
+			<span>h</span>ub</h4>
+	</div>
+	<!-- //inner banner -->
+    <!-- breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{%  url 'home' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{%  url 'product_list' category.slug %}">{{category.name}}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{product.name}}</li>
+        </ol>
+    </nav>
+    <!-- //breadcrumbs -->
+    <!-- Single -->
+    <div class="innerf-pages section py-5">
+        <div class="container">
+            <div class="row my-sm-5">
+                <div class="col-lg-4 single-right-left">
+                    <div class="grid images_3_of_2">
+                        <div class="flexslider1">
+                            <ul class="slides">
+                                <li data-thumb="{{product.image.url}}">
+                                    <div class="thumb-image">
+                                        <img src="{{product.image.url}}" data-imagezoom="true" alt=" " class="img-fluid"> </div>
+                                </li>
+                                <li data-thumb="images/ms2.jpg">
+                                    <div class="thumb-image">
+                                        {% comment %} <img src="{{product.image.url}}" data-imagezoom="true" alt=" " class="img-fluid"> </div> {% endcomment %}
+                                </li>
+                                <li data-thumb="images/ms3.jpg">
+                                    <div class="thumb-image">
+                                        {% comment %} <img src="{{product.image.url}}" data-imagezoom="true" alt=" " class="img-fluid"> </div> {% endcomment %}
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 mt-lg-0 mt-5 single-right-left simpleCart_shelfItem">
+                    <h3>{{product.name}}</h3>
+                    <div class="caption">
+                        <div class="clearfix"> </div>
+                        <h6>${{product.price}}</h6>
+                    </div>
+                    <div class="desc_single">
+                        <h5>Description</h5>
+                        <p>{{product.description}}</p>
+                    </div>
+                    <div class="d-sm-flex justify-content-between">
+                        {% comment %} <div class="occasional">
+                            <h5 class="sp_title mb-3">Highlights</h5>
+                            <ul class="single_specific">
+                                <li>
+                                    <span>Fabric: </span> Poly-Viscose</li>
+                                <li>
+                                    <span>Pattern :</span> Solid</li>
+                                <li>
+                                    <span>Type :</span> Single Breasted</li>
+                                <li>
+                                    <span>Fit :</span> Slim</li>
+                            </ul>
+
+                        </div> {% endcomment %}
+                        <div class="color-quality mt-sm-0 mt-4">
+                            <h5 class="sp_title mb-3">services</h5>
+                            <ul class="single_serv">
+                                <li>
+                                    <a href="#">30 Day Return Policy</a>
+                                </li>
+                                <li class="mt-2">
+                                    <a href="#">Cash on Delivery available</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <form method="post" action="{% url 'add_cart' product.id  %}">
+                        <div class="description">
+                            {% csrf_token %}
+                            {% for product_attribute in product.product_attributes.all %}
+                                <div class="mb-4 d-flex form-check">
+                                    <input class="form-check-input" type="radio" name="size" id="size{{ product_attribute.pk}}" checked="checked" value="{{ product_attribute.pk }}">
+                                    <label class="form-check-label" for="size{{ product_attribute.pk}}">
+                                        {{ product_attribute.size}}
+                                    </label>
+                                </div>
+                            {% endfor%}
+                        </div>
+                        <div class="occasion-cart">
+                            <div class="chr single-item single_page_b">
+                                <button type="submit" class="hub-cart phub-cart btn">
+                                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /new_arrivals -->
+    <div class="section singlep_btm pb-5">
+        <div class="container">
+            <div class="new_arrivals">
+                <h4 class="rad-txt text-capitalize">you may also be interested in
+                </h4>
+                <!-- card group 2 -->
+                <div class="card-group my-5">
+                    <!-- card -->
+                    {% for product in products %}
+                        <div class="col-lg-3 col-sm-6 p-0">
+                            <div class="card product-men p-3">
+                                <div class="men-thumb-item">
+                                    <img src="{{product.image.url}}" alt="img" class="card-img-top">
+                                    <div class="men-cart-pro">
+                                        <div class="inner-men-cart-pro">
+                                            <a href="{%  url 'product_view' product.slug %}" class="link-product-add-cart">Quick View</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- card body -->
+                                <div class="card-body  py-3 px-2">
+                                    <h5 class="card-title text-capitalize">{{product.name}}</h5>
+                                    <div class="card-text d-flex justify-content-between">
+                                        <p class="text-dark font-weight-bold">${{product.price}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <!-- //card -->
+                </div>
+                <!-- //card group -->
+                <!--//new_arrivals-->
+            </div>
+        </div>
+    </div>
+    <!--// Single -->
+{% endblock %}

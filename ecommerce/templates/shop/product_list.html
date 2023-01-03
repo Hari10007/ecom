@@ -1,0 +1,165 @@
+{% extends 'shop/main.html' %}
+{% load static %}
+{% block title %}Category{% endblock %}
+
+{% block content %}
+    <div class="ibanner_w3 pt-sm-5 pt-3">
+        <h4 class="head_agileinfo text-center text-capitalize text-center pt-5">
+            <span>f</span>ashion
+            <span>h</span>ub</h4>
+    </div>
+    <!-- //inner banner -->
+    <!-- breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{%  url 'home' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{category.name}}</li>
+        </ol>
+    </nav>
+    <!-- //breadcrumbs -->
+    <!-- Shop -->
+    <div class="innerf-pages section">
+        <div class="fh-container mx-auto">
+            <div class="row my-lg-5 mb-5">
+                <!-- grid left -->
+                <div class="side-bar col-lg-3">
+                    <!--preference -->
+                    {% comment %} <div class="left-side">
+                        <h3 class="shopf-sear-headits-sear-head">
+                            Categories</h3>
+                        <ul>
+                            <li>
+                                <input type="checkbox" class="checked" name="cat1" id="cat1">
+                                <label for="cat1">Fashion</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="checked" name="cat2" id="cat2">
+                                <label for="cat2">Popular</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="checked" name="cat3" id="cat3">
+                                <label for="cat3">Trending</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="checked" name="cat4" id="cat4">
+                                <label for="cat4">Sort by popularity</label>
+                            </li>
+
+                        </ul>
+                    </div> {% endcomment %}
+                    <!-- // preference -->
+                    <div class="search-hotel">
+                        <h3 class="shopf-sear-headits-sear-head">
+                            <span>Brand</span> in focus</h3>
+                        <ul>
+                            {% for brand in brands %}
+                                <li>
+                                    <input type="hidden" name="slug" value="{{category.slug}}">
+                                    <input type="checkbox" class="filter-checkbox" data-filter="brand" value="{{brand.pk}}" name="brand+{{brand.pk}}" id="brand+{{brand.pk}}">
+                                    <label for="brand+{{brand.pk}}">{{ brand.name }}</label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!--preference -->
+                    {% comment %} <div class="left-side">
+                        <h3 class="shopf-sear-headits-sear-head">
+                            <span>latest</span> arrivals</h3>
+                        <ul>
+                            <li>
+                                <input type="checkbox" class="filter-checkbox" data-filter="created" name="arr1" id="arr1">
+                                <label for="arr1">last 30 days</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="filter-checkbox" name="arr2" id="arr2">
+                                <label for="arr2">last 90 days</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="filter-checkbox" name="arr3" id="arr3">
+                                <label for="arr3">last 150 days</label>
+                            </li>
+
+                        </ul>
+                    </div> {% endcomment %}
+                    <!-- // preference -->
+                    <!-- discounts -->
+                    <div class="left-side">
+                        <h3 class="shopf-sear-headits-sear-head">Sizes</h3>
+                        <ul>
+                            {% for size in sizes %}
+                                <li>
+                                    <input type="checkbox" class="filter-checkbox" data-filter="size" value="{{size.pk}}" name="size1" id="size+{{size.pk}}">
+                                    <label for="size+{{size.pk}}">{{ size.title }}</label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <!-- //discounts -->
+                   
+                    <!-- //Binding -->
+                    <!-- //discounts -->
+                </div>
+                <!-- //grid left -->
+                <!-- grid right -->
+                <div class="col-lg-9 mt-lg-0 mt-5 right-product-grid">
+                    <!-- card group  -->
+                    <div class="card-group" id="filteredProducts">
+                        {% for product in products %}
+                            <div class="col-lg-3 col-sm-6 p-0">
+                                <div class="card product-men p-3">
+                                    <div class="men-thumb-item">
+                                        <img src="{{product.image.url}}" alt="img" class="card-img-top">
+                                        {% if product.available %}
+                                            <div class="men-cart-pro">
+                                                <div class="inner-men-cart-pro">
+                                                    <a href="{%  url 'product_view' product.slug %}" class="link-product-add-cart">Quick View</a>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <span class="px-2 position-absolute">out of stock</span>
+                                        {% endif %}
+                                    </div>
+                                    <!-- card body -->
+                                    <div class="card-body  py-3 px-2">
+                                        <h5 class="card-title text-capitalize">{{product.name}}</h5>
+                                        <div class="card-text d-flex justify-content-center">
+                                            <p class="text-dark font-weight-bold">${{product.price}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="d-flex justify-content-center">
+                                <h5>Sorry no products Found!</h5>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {% if products.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a></li>
+                            {% endif %}
+                            {% for i in products.paginator.page_range %}
+                                {% if products.number == i %}
+                                    <li class="page-item active "><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if products.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/shop/product_filter.js' %}"></script>
+{% endblock scripts %}

@@ -1,0 +1,28 @@
+{% extends 'shop/main.html' %}
+{% load static %}
+{% block title %}Thank you{% endblock %}
+
+
+{% block content%}
+    <!-- inner banner -->
+	<div class="ibanner_w3 pt-sm-5 pt-3">
+		<h4 class="head_agileinfo text-center text-capitalize text-center pt-5">
+			<span>f</span>ashion
+			<span>h</span>ub</h4>
+	</div>
+
+    <section class="checkout_wthree py-sm-5 py-3">
+        <div class="container text-center ">
+            <h1 class="display-1"><strong>Thank you!</strong></h1>
+            
+            <h2>Your order was completed successfully</h2>
+            <hr class="my-4" />
+            {% for item in order.order_items.all %}
+                <img src="{{ item.product.image.url }}" alt="img" class="w-10">
+            {% endfor %}
+            <hr class="my-4" />
+            <a href="{% url 'order_details' order.order_number %}" class="btn btn-info btn-rounded">Order Details >> </a>
+        </div>
+    </section>
+
+{% endblock%}

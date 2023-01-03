@@ -1,0 +1,99 @@
+{% extends 'admin_dashboard/main.html' %}
+{% block title %}Product{% endblock %}
+
+{% block content %}
+    <div id="page-content-wrapper">
+        {% with title="Products List" %}
+            {% include "admin_dashboard/nav_bar.html" %}
+        {% endwith %}
+
+        <div class="container-fluid px-4">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="container-fluid p-0">
+                        <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert" >
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            </button>
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %} 
+            <div class="row my-4">
+                <div class="col-md-6">
+                    <form class="d-flex" method="POST">
+                        {% csrf_token %}
+                        <input class="form-control me-2" type="search" placeholder="Search product" name="keyword" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+
+                <div class="col-md-6 d-flex flex-row-reverse">
+                    <a href="{% url 'product_create' %}" class="btn btn-outline-success">Add Product</a>
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col">
+                    <table class="table bg-white rounded shadow-sm  table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" width="50">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Slug</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Updated</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products%}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ product.name}}</td>
+                                    <td>{{ product.category.name}}</td>
+                                    <td>{{ product.slug}}</td>
+                                    <td>{{ product.price}}</td>
+                                    <td>{{ product.created}}</td>
+                                    <td>{{ product.updated}}</td>
+                                    <td><a href="{% url 'product_update' product.id  %}"><i class="fa fa-edit" style="font-size:24px;color:green"></i></a></td>
+                                    <td>
+                                        <form method="POST" action="{% url 'product_delete' product.id %}">
+                                            {% csrf_token %}
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm" data-toggle="tooltip" title='Delete'>Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                    <tr class="text-center">
+                                        <td colspan="9">There are no Record Found!</td>
+                                    </tr>   
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {% if products.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a></li>
+                            {% endif %}
+                            {% for i in products.paginator.page_range %}
+                                {% if products.number == i %}
+                                    <li class="page-item active "><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if products.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

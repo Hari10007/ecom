@@ -1,0 +1,123 @@
+{% extends 'shop/main.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Order Details{% endblock %}
+
+
+{% block content%}
+    <!-- inner banner -->
+	<div class="ibanner_w3 pt-sm-5 pt-3">
+		<h4 class="head_agileinfo text-center text-capitalize text-center pt-5">
+			<span>f</span>ashion
+			<span>h</span>ub</h4>
+	</div>
+    <!-- //inner banner -->
+    <!-- breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{%  url 'home' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{%  url 'my_orders' %}">Orders</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ order.order_number }}</li>
+        </ol>
+    </nav>
+    <!-- //breadcrumbs -->
+
+
+    <section class="checkout_wthree py-sm-5 py-3">
+        <div class="container">
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form  method="POST" action="{% url 'cancel_order' order.order_number %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="staticBackdropLabel">Reason to cancel order?</h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                {{ refund_form.reason|as_crispy_field}}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Send Request</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card-header">
+                        <h2 class="mb-0">Order View
+                            <a href="{% url 'my_orders' %}" class="btn btn-warning float-end text-white"><i class="fa fa-reply"></i> Back</a>
+                        </h2>
+                    </div>
+
+                    <div class="card-body">
+                       <div class="row">
+                            <div class="col-md-8">
+                                <h4>Order Details</h4>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h6>Order Number: <span class="float-end">{{ order.order_number }}</span></h6>
+                                        <hr>
+                                        {% for item in order.order_items.all %}
+                                            <div class="row">
+                                                <div class="col-md-3 text-center">
+                                                    <img src="{{ item.product.image.url}}" alt="ProductImage" height="100px" width="100px">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h6>{{ item.product.name }}</h6>
+                                                    <h6 class="my-3">Quantity:<span class="mx-5">{{ item.quantity }}</span></h6>
+                                                </div>
+                                                <div class="col-md-3 my-5">
+                                                    <h6>$ {{ item.sub_total }}</h6>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        <hr>
+                                        <h4 class="mt-2"> Total : <span class="float-end">${{ order.grand_total }}</span></h4>
+                                        <h6 class="mt-2"> Payment Mode : <span class="float-end">{{ order.payment_method }}</span></h6>
+                                        <h6 class="mt-2"> Order Status : 
+                                            {% if order.status == "Confirmed" %}
+                                                <span class="float-end p-1 mb-2 bg-primary text-white rounded">{{ order.status }}</span>
+                                            {% elif order.status == "Out For Shipping" %}
+                                                <span class="float-end p-1 mb-2 bg-warning text-dark rounded">{{ order.status }}</span>
+                                            {% elif order.status == "Cancel" %}
+                                                <span class="float-end p-1 mb-2 bg-danger text-white rounded">{{ order.status }}</span>
+                                            {% else %}
+                                                <span class="float-end p-1 mb-2 bg-success text-white rounded">{{ order.status }}</span>
+                                            {% endif %}
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h4>Shipping Address</h4>
+                                <hr>
+                                 <strong>{{ order.address.address }}</strong>
+                                 <strong>{{ order.address.city }}</strong></br>
+                                 <strong>{{ order.address.postal_code }}</strong>
+                                 <hr>
+                                 {% if order.status != "Cancel" %}
+                                    <a href="{% url 'save_pdf' order.order_number %}" class="btn btn-outline-primary">Download Invoice</a>
+                                 {% endif %}
+                                 {% if order.status == "Confirmed" %}
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        Cancel Order
+                                    </button>
+                                 {% endif %}
+                            </div>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock%}

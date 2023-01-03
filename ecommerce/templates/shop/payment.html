@@ -1,0 +1,151 @@
+{% extends 'shop/main.html' %}
+{% load static %}
+{% block title %}Payment{% endblock %}
+
+
+{% block content%}
+	<!-- inner banner -->
+	<div class="ibanner_w3 pt-sm-5 pt-3">
+		<h4 class="head_agileinfo text-center text-capitalize text-center pt-5">
+			<span>f</span>ashion
+			<span>h</span>ub</h4>
+	</div>
+	<!-- //inner banner -->
+    <!-- breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{%  url 'home' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Payment</li>
+        </ol>
+    </nav>
+    <!-- //breadcrumbs -->
+    <!--Payment-->
+    <section class="payment_w3ls py-5">
+        <div class="container">
+            <div class="privacy about">
+                <h5 class="head_agileinfo text-center text-capitalize pb-5">
+                    <span>P</span>ayment Details</h5>
+                <!--/tabs-->
+                <div class="responsive_tabs innfpage-tabs">
+                    <div id="horizontalTab">
+                        <ul class="resp-tabs-list">
+                            <li>Cash on delivery (COD)</li>
+                            <li>Razor Pay</li>
+                            <li>Paypal Account</li>
+                        </ul>
+                        <div class="resp-tabs-container">
+                            <!--/tab_one-->
+                            <div class="tab1">
+                                <div class="pay_info">
+                                    <form action={% url "place_order" %} method="POST">
+                                        {%csrf_token%}
+                                        <input type="hidden" value="COD" name="payment_method">
+                                        <input type="hidden" value="{{address.pk}}" name="address">
+                                        <div class="vertical_post check_box_fpay">
+                                            <h5>COD - Now Available</h5>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary px-3 mx-1 text-white rounded">COD | Place Order</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <!--//tab_one-->
+                            <div class="tab2">
+                                <div class="pay_info">
+                                    <div class="col-md-8 tab-grid">
+                                        {%csrf_token%}
+                                        <input type="hidden" value="{{address.pk}}" name="address">
+                                        <img class="pp-img" src="{% static "img/payment/razorpay.jpg" %}" alt="Image Alternative text" title="Paypal">
+                                        <p>Important: You will be redirected to RazorPay website to securely complete your
+                                            payment.
+                                        </p>
+                                        <button type="button" id="rzp-button1" class="btn btn-primary px-5 mx-1 text-white rounded">Pay</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="tab3">
+                                <div class="pay_info">
+                                    <div class="row">
+                                        <div class="col-md-8 tab-grid">
+                                            {% csrf_token %}
+                                            <input type="hidden" value="{{address.pk}}" name="address">
+                                            <img class="pp-img" src="{% static "img/payment/paypal.png" %}" alt="Image Alternative text" title="Paypal">
+                                            <p>Important: You will be redirected to PayPal's website to securely complete your
+                                                payment.
+                                            </p>
+                                            
+                                        </div>
+                                        <div id="paypal-button-container"></div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--//tabs-->
+            </div>
+
+        </div>
+    </section>
+    <!-- //payment -->
+{% endblock content%}  
+    
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AXqptDhXS0fpKd_diG_B0gOAkLdz6gv1yq4Pwe6V1S4wt_oeuEqytSOZ4a6T8s3_ONSlpDkdu8GXgRlR&currency=USD"></script>
+    <script>
+        paypal.Buttons({
+            style:{
+                'layouts':'vertical',
+            },
+            
+          // Sets up the transaction when a payment button is clicked
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: '0.01' // Can also reference a variable or function
+                }
+              }]
+            });
+          },
+          // Finalize the transaction after payer approval
+          onApprove: (data, actions) => {
+            return actions.order.capture().then(function(orderData) {
+              // Successful capture! For dev/demo purposes:
+              //console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+              const transaction = orderData.purchase_units[0].payments.captures[0];
+              //alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+              // When ready to go live, remove the alert and show a success message within this page. For example:
+              const element = document.getElementById('paypal-button-container');
+              element.innerHTML = '<h3>Thank you for your payment!</h3>';
+              // Or go to another URL:  actions.redirect('thank_you.html');
+              var id = $("[name='address']").val();
+              var token =$("[name='csrfmiddlewaretoken']").val();
+              data = {
+                "payment_method": "Paid by Paypal",
+                "address": id,
+                "transaction_id": transaction.id,
+                csrfmiddlewaretoken: token,
+              }
+              $.ajax({
+                method: "POST",
+                url: "/place_order",
+                data: data,
+                //
+                success: function (response) {
+                    swal("Congratulations!",response.status,"success").then((value) => {
+                        window.location.href="/order/thank_you"
+                    });
+                }
+              });
+            });
+          }
+        }).render('#paypal-button-container');
+    </script>
+ 
+{% endblock scripts %}

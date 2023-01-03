@@ -1,0 +1,154 @@
+{% extends 'shop/main.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Checkout{% endblock %}
+
+
+{% block content%}
+    <!-- inner banner -->
+	<div class="ibanner_w3 pt-sm-5 pt-3">
+		<h4 class="head_agileinfo text-center text-capitalize text-center pt-5">
+			<span>f</span>ashion
+			<span>h</span>ub</h4>
+	</div>
+	<!-- //inner banner -->
+    <!-- breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{%  url 'home' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+        </ol>
+    </nav>
+    <!-- //breadcrumbs -->
+    <!--checkout-->
+    <section class="checkout_wthree py-sm-5 py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7 mb-4">
+                    <div class="card mb-4">
+                    <div class="card-header py-3">
+                        <h5 class="mb-0">Billing Address</h5>
+                    </div>
+                    
+                    <div class="card-body">
+                        <form id="addressForm" method="post" action={% url "payment" %}>
+                            {% csrf_token %}
+                            {% for address in addresses %}
+                                <div class="mb-4 form-check">
+                                    <input class="form-check-input" type="radio" name="address" id="flexRadioDefault{{ address.id}}" value="{{ address.id }}">
+                                    <label class="form-check-label" for="flexRadioDefault{{ address.id}}">
+                                        {{ address.address}}
+                                    </label>
+                                </div>
+                            {% endfor%}
+                        </form>
+                        <div>
+                            <button id="btn" class="mb-3 btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>Add new address</button>
+                        </div>
+                        <form id="form" method="POST" action={% url 'add_address'%} style="display: none">
+                            {% csrf_token%}
+                            <!-- Text input -->
+                            <div class="form-outline mb-4">
+                                {{ address_form.address|as_crispy_field }}
+                                {% comment %} <input type="text" id="form6Example4" class="form-control" />
+                                <label class="form-label" for="form6Example4">Address</label> {% endcomment %}
+                            </div>
+                
+                            <!-- Text input -->
+                            <div class="form-outline mb-4">
+                                {{ address_form.city|as_crispy_field }}
+                                {% comment %} <input type="text" id="form6Example3" class="form-control" />
+                                <label class="form-label" for="form6Example3">City</label> {% endcomment %}
+                            </div>
+                
+                            <!-- Text input -->
+                            <div class="form-outline mb-4">
+                                {{ address_form.country|as_crispy_field }}
+                                {% comment %} <input type="text" id="form6Example3" class="form-control" />
+                                <label class="form-label" for="form6Example3">Country</label> {% endcomment %}
+                            </div>
+                
+                            <!-- Number input -->
+                            <div class="form-outline mb-4">
+                                {{ address_form.postal_code|as_crispy_field }}
+                                {% comment %} <input type="number" id="form6Example6" class="form-control" />
+                                <label class="form-label" for="form6Example6">Postal Code</label> {% endcomment %}
+                            </div>
+                
+                            <hr class="my-4" />
+
+                            <button class="btn btn-primary btn-lg btn-block" type="submit">
+                                Save
+                            </button>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            
+                <div class="col-md-5 mb-4">
+                    <div class="card mb-4">
+                    <div class="card-header py-3">
+                        <h5 class="mb-0">Review your order</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Products</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Price</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for cart_item in cart_items %}
+                                        <tr>
+                                            <th scope="row">{{ cart_item.product.name }}</th>
+                                            <td>x{{ cart_item.quantity }}</td>
+                                            <td>${{ cart_item.sub_total }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                <div>
+                                    <strong>Total Price</strong>
+                                </div>
+                                <span><strong>${{ total }}</strong></span>
+                            </li>
+                        </ul>
+                        <form method="post" action={% url "apply_coupon" %}>
+                            {% include "shop/alert.html"%}
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label> Have Coupon? </label>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" name="coupon" placeholder="Apply Coupon" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                      <button class="btn btn-primary" type="submit">Apply</button>
+                                    </div>
+                                </div>
+                            </div>  
+                        </form>
+                        {% if cart.coupon %}
+                            <a href="{% url 'remove_coupon' cart.id %}" class="btn btn-warning"> {{cart.coupon.code}} Applied</a>
+                        {% endif %}
+                    </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="col-md-12 text-center">
+                        <button type="button" class="btn btn-primary" id="checkout-btn" >Proceed</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </section>
+      <script src="{% static 'js/shop/checkout.js' %}"></script>
+{% endblock%}
