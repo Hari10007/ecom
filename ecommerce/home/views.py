@@ -14,6 +14,11 @@ def homepage(request):
     men_category = Category.objects.get(slug="mens-clothing")
     women_category = Category.objects.get(slug="womens-clothing")
 
+
+    mens_products = Product.objects.filter(category__in=men_category.get_descendants(include_self=True), is_featured=True).order_by('name')
+    women_products = Product.objects.filter(category__in=women_category.get_descendants(include_self=True), is_featured=True).order_by('name')
+    kids_products = Product.objects.filter(category__in=kids_category.get_descendants(include_self=True), is_featured=True).order_by('name')
+
     try:
         if request.user.is_authenticated:
             cart = Cart.objects.get(user = request.user)
@@ -24,7 +29,10 @@ def homepage(request):
     context = {
         "men_category": men_category,
         "women_category": women_category,
-        "kids_category": kids_category
+        "kids_category": kids_category,
+        "mens_products": mens_products,
+        "women_products": women_products,
+        "kids_products": kids_products
     }
 
     return render(request,"shop/home.html",context)
@@ -57,7 +65,7 @@ def product_list(request, slug):
     brands = Brand.objects.all()
     category = Category.objects.get(slug=slug)
     products = Product.objects.filter(category__in=category.get_descendants(include_self=True)).order_by('name')
-    paginator = Paginator(products, 20)
+    paginator = Paginator(products, 8)
     page = request.GET.get('page')
     paged_products = paginator.get_page(page)
     context = {

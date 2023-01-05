@@ -7,10 +7,11 @@ import datetime
 
 class ProductForm(forms.ModelForm):
     slug = forms.SlugField(widget=forms.TextInput(attrs={'class': 'form-input'}),required=False)
+    main_image = forms.FileField()
 
     class Meta:
         model = Product
-        fields = ['name','category','slug','image','description','quantity','price','available']
+        fields = ['name','category','slug','main_image','description','quantity','price','available']
 
 class ProductImageForm(forms.ModelForm):
     class Meta:

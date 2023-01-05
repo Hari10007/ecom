@@ -24,11 +24,12 @@
         <link rel="stylesheet" type="text/css" href="{% static '/css/shop/shop.css' %}"  media="all">
         <link rel="stylesheet" type="text/css" href="{% static '/css/shop/owl.carousel.min.css' %}"  media="all">
         <link rel="stylesheet" type="text/css" href="{% static '/css/shop/style.css' %}"  media="all">
-        <link rel="stylesheet" type="text/css" href="{% static '/css/shop/fontawesome-all.min.css' %}"  media="all">
+        {% comment %} <link rel="stylesheet" type="text/css" href="{% static '/css/shop/fontawesome-all.min.css' %}"  media="all"> {% endcomment %}
         <link rel="stylesheet" type="text/css" href="{% static '/css/shop/flexslider.css' %}"  media="all">
         <link rel="stylesheet" type="text/css" href="{% static '/css/shop/checkout.css' %}"  media="all">
         <link rel="stylesheet" type="text/css" href="{% static '/css/shop/easy-responsive-tabs.css' %}"  media="all">
         <link rel="stylesheet" type="text/css" href="{% static '/css/shop/creditly.css' %}"  media="all">
+        <link rel="stylesheet" type="text/css" href="{% static '/css/shop/owl.carousel.min.css' %}"  media="all">
         <link href="//fonts.googleapis.com/css?family=Elsie+Swash+Caps:400,900" rel="stylesheet">
         <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i" rel="stylesheet">
     </head>
@@ -52,9 +53,8 @@
                             <form id="search-form" class="form-inline">
                                 {% csrf_token %}
                                 <div id="search-autocomplete">
-                                    <input class="form-control mr-sm-2" type="text" placeholder="Search for products here" id="search-input" aria-label="Search">
+                                    <input class="form-control mr-sm-2" type="text" placeholder="Search for products here" id="search-input" aria-label="Search"  size="50px">
                                 </div>
-                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                             </form>
                             <div id="results-box" class="results-card invisible position-absolute top-100 start-0"></div>
                         </div>
@@ -275,49 +275,7 @@
             });
         </script>
 
-       
-        <script>
-            var owl = $('.owl-carousel');
-            owl.owlCarousel({
-                items: 4,
-                loop: false,
-                margin: 10,
-                autoplay: false,
-                autoplayTimeout: 5000,
-                autoplayHoverPause: false,
-                responsive: {
-                    320: {
-                        items: 1,
-                    },
-                    568: {
-                        items: 2,
-                    },
-                    991: {
-                        items: 3,
-                    },
-                    1050: {
-                        items: 4
-                    }
-                }
-            });
-        </script>
-
         
-
-        <script>
-            hub.render();
-
-            hub.cart.on('new_checkout', function (evt) {
-                var items, len, i;
-
-                if (this.subtotal() > 0) {
-                    items = this.items();
-
-                    for (i = 0, len = items.length; i < len; i++) {}
-                }
-            });
-        </script>
-
         
 
         <script>
@@ -341,12 +299,14 @@
                 });
             });
         </script>
+
+        
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="{% static 'js/shop/responsiveslides.min.js' %}"></script>
-        <script src="{% static 'js/shop/minicart.js' %}"></script>
+        {% comment %} <script src="{% static 'js/shop/minicart.js' %}"></script> {% endcomment %}
         <script src="{% static 'js/shop/move-top.js' %}"></script>
         <script src="{% static 'js/shop/easing.js' %}"></script>
         <script src="{% static 'js/shop/SmoothScroll.min.js' %}"></script>
@@ -356,6 +316,34 @@
         <script src="{% static 'js/shop/cart.js' %}"></script>
         <script src="{% static 'js/shop/main.js' %}"></script>
 
+         <!-- Product slider Owl-Carousel-JavaScript -->
+        <script src="{% static 'js/shop/owl.carousel.js' %}"></script>
+        <script>
+            let owl = $('.owl-carousel');
+            owl.owlCarousel({
+                items: 4,
+                loop: false,
+                margin: 10,
+                autoplay: false,
+                autoplayTimeout: 5000,
+                autoplayHoverPause: false,
+                responsive: {
+                    320: {
+                        items: 1,
+                    },
+                    568: {
+                        items: 2,
+                    },
+                    991: {
+                        items: 3,
+                    },
+                    1050: {
+                        items: 4
+                    }
+                }
+            });
+        </script>
+        <!-- //Product slider Owl-Carousel-JavaScript -->
     <!-- smooth dropdown -->
     <script>
         $(document).ready(function () {
@@ -367,20 +355,6 @@
         });
     </script>
 
-
-    <script>
-        hub.render();
-
-        hub.cart.on('new_checkout', function (evt) {
-            var items, len, i;
-
-            if (this.subtotal() > 0) {
-                items = this.items();
-
-                for (i = 0, len = items.length; i < len; i++) {}
-            }
-        });
-    </script>
 
     <script>
         $(document).ready(function () {

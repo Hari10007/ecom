@@ -81,6 +81,8 @@
                                             <span class="p-1 mb-2 bg-primary text-white rounded">{{ order.status }}</span>
                                         {% elif order.status == "Out For Shipping" %}
                                             <span class="p-1 mb-2 bg-warning text-dark rounded">{{ order.status }}</span>
+                                        {% elif order.status == "Cancel" %}
+                                            <span class="p-1 mb-2 bg-danger text-white rounded">{{ order.status }}</span>
                                         {% else %}
                                             <span class="p-1 mb-2 bg-success text-white rounded">{{ order.status }}</span>
                                         {% endif %}

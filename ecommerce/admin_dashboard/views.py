@@ -40,6 +40,9 @@ def admin_dashboard(request):
 @user_is_admin
 def category_list(request):
     categories = Category.objects.all().order_by('-created')
+    if request.method == 'POST':
+        keyword = request.POST.get('keyword')
+        categories = categories.filter(Q(name__icontains = keyword) | Q(description__icontains = keyword) | Q(parent__name__icontains = keyword)).order_by('-created')
     paginator = Paginator(categories, 8)
     page = request.GET.get('page')
     paged_categories = paginator.get_page(page)
@@ -91,7 +94,7 @@ def product_list(request):
     products = Product.objects.all().order_by('-created')
     if request.method == 'POST':
         keyword = request.POST.get('keyword')
-        products = products.filter(Q(name__icontains = keyword) | Q(description__icontains = keyword)).order_by('-created')
+        products = products.filter(Q(name__icontains = keyword) | Q(category__name__icontains = keyword) | Q(description__icontains = keyword)).order_by('-created')
     paginator = Paginator(products, 7)
     page = request.GET.get('page')
     paged_products = paginator.get_page(page)
@@ -105,18 +108,18 @@ def product_create(request):
     product_form = ProductForm()
     product_image_form = ProductImageForm()
     if request.method == 'POST':
-        product_form = ProductForm(request.POST, request.FILES or None)
-        product_image_form = ProductImageForm(request.POST, request.FILES)
+        product_form = ProductForm(request.POST or None, request.FILES or None)
+        product_image_form = ProductImageForm(request.POST or None, request.FILES or None)
         images = request.FILES.getlist('image')
-        if product_form.is_valid() and product_image_form.is_valid():
+        if product_form.is_valid():
             name = product_form.cleaned_data['name']
             category = product_form.cleaned_data['category']
-            image = product_form.cleaned_data['image']
+            main_image = product_form.cleaned_data['main_image']
             description = product_form.cleaned_data['description']
             price = product_form.cleaned_data['price']
             quantity = product_form.cleaned_data['quantity']
             available = product_form.cleaned_data['available']
-            product = Product.objects.create(name=name, category=category, image=image, description=description, price=price, available=available, quantity = quantity)
+            product = Product.objects.create(name=name, category=category, image=main_image, description=description, price=price, available=available, quantity = quantity)
 
             for image in images:
                 ProductImage.objects.create(product=product, image=image)
@@ -157,6 +160,9 @@ def product_delete(request, product_id):
 @user_is_admin
 def customer_list(request):
     customers = User.objects.filter(is_staff=False, is_admin=False, is_superuser=False).order_by('-date_joined')
+    if request.method == 'POST':
+        keyword = request.POST.get('keyword')
+        customers = customers.filter(Q(username__icontains = keyword) | Q(email__icontains = keyword)).order_by('-date_joined')
     paginator = Paginator(customers, 7)
     page = request.GET.get('page')
     paged_customers = paginator.get_page(page)
@@ -182,6 +188,9 @@ def customer_block(request, customer_id):
 def order_list(request):
     date_form = DateForm()
     orders = Order.objects.all().order_by('-created_at')
+    if request.method == 'POST':
+        keyword = request.POST.get('keyword')
+        orders = orders.filter(Q(status__icontains = keyword) | Q(user__username__icontains = keyword) | Q(payment_method__icontains = keyword)).order_by('-created_at')
     paginator = Paginator(orders, 15)
     page = request.GET.get('page')
     paged_orders = paginator.get_page(page)
