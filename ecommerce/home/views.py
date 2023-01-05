@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from admin_dashboard.models import Product, Category, Brand, Size
 from account.models import User
+from cart.models import Cart
 from django.db.models import Q
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -12,6 +13,13 @@ def homepage(request):
     kids_category = Category.objects.get(slug="kids-clothing")
     men_category = Category.objects.get(slug="mens-clothing")
     women_category = Category.objects.get(slug="womens-clothing")
+
+    try:
+        if request.user.is_authenticated:
+            cart = Cart.objects.get(user = request.user)
+            request.session['cart_item'] = cart.cart_items.count()
+    except Cart.DoesNotExist:
+        request.session['cart_item'] = 0
 
     context = {
         "men_category": men_category,
@@ -62,7 +70,6 @@ def product_list(request, slug):
 
 
 def product_view(request, slug):
-    
     product = Product.objects.get(slug=slug)
     products = product.category.products.filter(~Q(slug=slug)).order_by("-id")[:4]
     context = {

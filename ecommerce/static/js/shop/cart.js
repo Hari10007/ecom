@@ -91,14 +91,6 @@ for(var i=0; i< updateBtn.length; i++){
                 $("#subtotal-"+product_id).text(subtotal);
                 $("#sub_total-"+product_id).text(subtotal);
                 $("#total").text(total);
-                
-                if (quantity == 1){
-                    document.querySelector('[data-product="{{ product_id } "]').disabled = true;
-                    const elements = document.querySelectorAll("data-product");
-                    elements.forEach(function (element) {
-                        element.disabled = true;
-                    });
-                }
             }
         });
     }

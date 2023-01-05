@@ -49,8 +49,10 @@ def increment_cart(request, total = 0):
             cart = Cart.objects.get(session_id = _cart(request))
 
         cart_item = CartItem.objects.get(product = product, cart = cart)
-        cart_item.quantity += 1
-        cart_item.save()
+        product_variant = product.product_attributes.filter(size = cart_item.size.size).first()
+        if cart_item.quantity < product_variant.quantity:
+            cart_item.quantity += 1
+            cart_item.save()
 
         cart_items = CartItem.objects.filter(cart=cart, is_active=True)
 
@@ -81,8 +83,6 @@ def decrement_cart(request, total = 0):
     if cart_item.quantity > 1:
         cart_item.quantity -= 1
         cart_item.save()
-    else:
-        cart_item.delete()
     
     cart_items = CartItem.objects.filter(cart=cart, is_active=True)
 

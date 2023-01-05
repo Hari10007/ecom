@@ -16,10 +16,10 @@ const sendSearchData = (product)  => {
             'product': product, 
         },
         success: (res)=> {
+            resultsBox.innerHTML = ""
             console.log(res)
             const data = res.data
             if (Array.isArray(data)) {
-                resultsBox.innerHTML = ""
                 data.forEach(product => {
                     resultsBox.innerHTML += `
                         <a href="${'/product/'}${product.slug}" class="text-decoration-none">

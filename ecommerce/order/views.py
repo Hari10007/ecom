@@ -128,6 +128,7 @@ def placeOrder(request):
 
             item.delete()
 
+        request.session['cart_item'] = cart.cart_items.count()
         cart.coupon = None
         cart.save()
 

@@ -7,7 +7,7 @@ from account.models import User
 class Cart(models.Model):
     session_id = models.CharField(max_length=250, unique=True)
     user = models.ForeignKey(User, null = True, blank = True, on_delete=models.CASCADE)
-    coupon =  models.ForeignKey(Coupon, on_delete=models.SET_NULL,null = True, blank = True, related_name="cart_coupons")
+    coupon =  models.ForeignKey(Coupon, on_delete=models.SET_NULL,null = True, blank = True, related_name="carts")
     date_added = models.DateTimeField(auto_now_add=True)
 
     def get_cart_total(self):
@@ -27,7 +27,7 @@ class Cart(models.Model):
        return str(self.session_id)
 
 class CartItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="cart_products")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="cart_items")
     cart =  models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_items")
     size = models.ForeignKey(ProductAttribute, on_delete=models.SET_NULL,null = True, blank = True)
     quantity = models.IntegerField()

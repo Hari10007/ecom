@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from .models import Product, Category, ProductImage
 from account.models import User
 from order.models import Order, OrderItem
-from .forms import ProductForm, ProductImageForm, CategoryForm
+from .forms import ProductForm, ProductImageForm, CategoryForm, DateForm
 from order.forms import OrderForm
 from django.contrib import messages
 from django.template import loader
@@ -180,12 +180,14 @@ def customer_block(request, customer_id):
 
 @user_is_admin
 def order_list(request):
+    date_form = DateForm()
     orders = Order.objects.all().order_by('-created_at')
     paginator = Paginator(orders, 15)
     page = request.GET.get('page')
     paged_orders = paginator.get_page(page)
     content ={
-        'orders': paged_orders
+        'orders': paged_orders,
+        'date_form': date_form
     }
     return render(request,"admin_dashboard/order.html", content)
 
@@ -234,9 +236,15 @@ def refund(request, order_no):
     return render (request, 'admin_dashboard/order_update.html', context)
 
 @user_is_admin
-def export_sales_xls(request):
+def export_sales_xls(request, month=None, year = None):
+    date_form = DateForm()
+    if request.method == 'POST':
+        date_form = DateForm(request.POST)
+        if date_form.is_valid():
+            month = date_form.cleaned_data['month']
+            year = date_form.cleaned_data['year']
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="sales.xls"'
+    response['Content-Disposition'] = f'attachment; filename="sales{year}{month}.xls"'
 
     wb = xlwt.Workbook(encoding='utf-8')
     ws = wb.add_sheet('Sales Data') # this will make a sheet named Users Data
@@ -255,7 +263,14 @@ def export_sales_xls(request):
     # Sheet body, remaining rows
     font_style = xlwt.XFStyle()
 
-    rows = Order.objects.all().values_list('order_items','user', 'grand_total', 'payment_method', 'status')
+    if not month and not year:
+        rows = Order.objects.all().values_list('order_items','user', 'grand_total', 'payment_method', 'status')
+    elif not year:
+        rows = Order.objects.all().values_list('order_items','user', 'grand_total', 'payment_method', 'status').filter(created_at__month = month)
+    elif not month:
+        rows = Order.objects.all().values_list('order_items','user', 'grand_total', 'payment_method', 'status').filter(created_at__year = year)
+    else:
+        rows = Order.objects.all().values_list('order_items','user', 'grand_total', 'payment_method', 'status').filter(Q(created_at__month = month) | Q(created_at__year = year))
     for row in rows:
         row_num += 1
         for col_num in range(len(row)):

@@ -10,14 +10,14 @@ class Order(models.Model):
    created_at = models.DateTimeField(auto_now_add=True)
    updated_at = models.DateTimeField(auto_now_add=True)
    transaction_id = models.CharField(max_length=200, null = True, blank = True)
-   orderstatuses =( 
+   order_statuses =( 
     ('Confirmed','Confirmed'),
     ('Out For Shipping', 'Out For Shipping'),
     ('Delivered', 'Delivered'),
     ('Cancel', 'Cancel'),
     ('Refunded', 'Refunded'),
    )
-   status = models.CharField(max_length=150, choices=orderstatuses, default="Confirmed")
+   status = models.CharField(max_length=150, choices=order_statuses, default="Confirmed")
    order_number = models.CharField(max_length=150, null=True)
    grand_total = models.DecimalField(max_digits=10, decimal_places=2, null = True, blank = True)
    address = models.ForeignKey(Address, null = True, on_delete=models.CASCADE)

@@ -18,6 +18,31 @@ a.hub-cart {
 	cursor: pointer;
 }
 
+#featured{
+	max-width: 500px;
+	max-height: 600px;
+
+	cursor: pointer;
+	border: 1px solid black;
+
+}
+
+#img-container{
+	z-index: 1;
+	max-width: 500px;
+	position: relative;
+}
+
+#lens{
+	z-index: 2;
+	position: absolute;
+	height: 125px;
+	width: 125px;
+	border:1px solid black;
+	background-repeat: no-repeat;
+	cursor: none;
+
+}
 div#my-cart-modal .modal-dialog {
 	width: 50%;
 	margin: 100px auto 0;

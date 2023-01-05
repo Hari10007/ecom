@@ -44,20 +44,20 @@
                         <a class="navbar-brand" href="{% url 'home'  %}">fh
                         </a>
                     </h1>
-                    <div class="input-group flex-column">
-                        <form id="search-form" class="form-inline">
-                            {% csrf_token %}
-                            <div id="search-autocomplete">
-                                <input class="form-control mr-sm-2" type="text" placeholder="Search for products here" id="search-input" aria-label="Search">
-                            </div>
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                        </form>
-                        <div id="results-box" class="results-card invisible position-absolute top-100 start-0"></div>
-                    </div>
                     <!-- //logo -->
                     
                     <div class="w3ls_right_nav ml-auto d-flex">
                         <!-- search form -->
+                        <div class="input-group flex-column">
+                            <form id="search-form" class="form-inline">
+                                {% csrf_token %}
+                                <div id="search-autocomplete">
+                                    <input class="form-control mr-sm-2" type="text" placeholder="Search for products here" id="search-input" aria-label="Search">
+                                </div>
+                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                            </form>
+                            <div id="results-box" class="results-card invisible position-absolute top-100 start-0"></div>
+                        </div>
                         <!-- search form -->
                         <div class="nav-icon d-flex">
                             <!-- sigin and sign up -->
@@ -209,22 +209,13 @@
                             <h5>Payment Method</h5>
                             <ul class="mt-4">
                                 <li class="list-inline-item">
-                                    <img src="images/pay2.png" alt="">
+                                    <img src="{% static 'img/home/pay2.png' %}" alt="">
                                 </li>
                                 <li class="list-inline-item">
-                                    <img src="images/pay5.png" alt="">
+                                    <img src="{% static 'img/home/pay3.png' %}" alt="">
                                 </li>
                                 <li class="list-inline-item">
-                                    <img src="images/pay3.png" alt="">
-                                </li>
-                                <li class="list-inline-item">
-                                    <img src="images/pay7.png" alt="">
-                                </li>
-                                <li class="list-inline-item">
-                                    <img src="images/pay8.png" alt="">
-                                </li>
-                                <li class="list-inline-item ">
-                                    <img src="images/pay9.png" alt="">
+                                    <img src="{% static 'img/home/pay8.png' %}" alt="">
                                 </li>
                             </ul>
                         </div>
@@ -260,23 +251,6 @@
             });
         </script>
         
-        <script>
-            $(document).ready(function () {
-                console.log("haasssssssssssssi");
-                const basicAutocomplete = document.querySelector('#search-autocomplete');
-                const data = ['One', 'Two', 'Three', 'Four', 'Five'];
-                const dataFilter = (value) => {
-                return data.filter((item) => {
-                    return item.toLowerCase().startsWith(value.toLowerCase());
-                });
-                };
-
-                new mdb.Autocomplete(basicAutocomplete, {
-                filter: dataFilter
-                });
-            })
-
-        </script>
 
         
         
@@ -358,7 +332,6 @@
             });
         </script>
 
-        <script src="{% static 'js/shop/jquery.flexslider.js' %}"></script>
         <script>
             // Can also be used with $(document).ready()
             $(window).load(function () {
@@ -368,18 +341,18 @@
                 });
             });
         </script>
-
+        
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="{% static 'js/shop/responsiveslides.min.js' %}"></script>
-        <script src="{% static 'js/shop/owl.carousel.js' %}"></script>
         <script src="{% static 'js/shop/minicart.js' %}"></script>
         <script src="{% static 'js/shop/move-top.js' %}"></script>
         <script src="{% static 'js/shop/easing.js' %}"></script>
         <script src="{% static 'js/shop/SmoothScroll.min.js' %}"></script>
         <script src="{% static 'js/shop/bootstrap.js' %}"></script>
         <script src="{% static 'js/shop/easy-responsive-tabs.js' %}"></script>
+        <script src="{% static 'js/shop/jquery.flexslider.js' %}"></script>
         <script src="{% static 'js/shop/cart.js' %}"></script>
         <script src="{% static 'js/shop/main.js' %}"></script>
 
@@ -394,22 +367,6 @@
         });
     </script>
 
-    <script>
-        window.onload = function () {
-            document.getElementById("password1").onchange = validatePassword;
-            document.getElementById("password2").onchange = validatePassword;
-        }
-
-        function validatePassword() {
-            var pass2 = document.getElementById("password2").value;
-            var pass1 = document.getElementById("password1").value;
-            if (pass1 != pass2)
-            document.getElementById("password2").setCustomValidity("Passwords Don't Match");
-            else
-            document.getElementById("password2").setCustomValidity('');
-            //empty string means no validation error
-        }
-    </script>
 
     <script>
         hub.render();
@@ -444,25 +401,6 @@
     </script>
 
 
-
-    <script>
-        $(function () {
-            var creditly = Creditly.initialize(
-                '.creditly-wrapper .expiration-month-and-year',
-                '.creditly-wrapper .credit-card-number',
-                '.creditly-wrapper .security-code',
-                '.creditly-wrapper .card-type');
-
-            $(".creditly-card-form .submit").click(function (e) {
-                e.preventDefault();
-                var output = creditly.validate();
-                if (output) {
-                    // Your validated credit card output
-                    console.log(output);
-                }
-            });
-        });
-    </script>
 
     <script>
         jQuery(document).ready(function ($) {

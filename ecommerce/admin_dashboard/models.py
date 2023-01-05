@@ -88,7 +88,7 @@ class Product(models.Model):
         return reverse('product_details', args=[self.id,self.slug])
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='products')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_images')
     image = models.ImageField(upload_to='product_images/')
     default = models.BooleanField(default=False)
 

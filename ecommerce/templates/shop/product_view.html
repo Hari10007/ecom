@@ -32,18 +32,13 @@
                     <div class="grid images_3_of_2">
                         <div class="flexslider1">
                             <ul class="slides">
-                                <li data-thumb="{{product.image.url}}">
-                                    <div class="thumb-image">
-                                        <img src="{{product.image.url}}" data-imagezoom="true" alt=" " class="img-fluid"> </div>
-                                </li>
-                                <li data-thumb="images/ms2.jpg">
-                                    <div class="thumb-image">
-                                        {% comment %} <img src="{{product.image.url}}" data-imagezoom="true" alt=" " class="img-fluid"> </div> {% endcomment %}
-                                </li>
-                                <li data-thumb="images/ms3.jpg">
-                                    <div class="thumb-image">
-                                        {% comment %} <img src="{{product.image.url}}" data-imagezoom="true" alt=" " class="img-fluid"> </div> {% endcomment %}
-                                </li>
+                                {% for product_image in product.product_images.all %}
+                                    <li data-thumb="{{product_image.image.url}}">
+                                        <div class="thumb-image">
+                                            <img src="{{product_image.image.url}}" data-imagezoom="true" alt=" " class="img-fluid"> 
+                                        </div>
+                                    </li>
+                                {% endfor %}
                             </ul>
                             <div class="clearfix"></div>
                         </div>
@@ -149,3 +144,9 @@
     </div>
     <!--// Single -->
 {% endblock %}
+
+
+{% block scripts %}
+    <script src="{% static 'js/shop/imagezoom.js' %}"></script>
+{% endblock scripts %}
+

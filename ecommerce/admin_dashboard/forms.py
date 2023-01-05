@@ -2,6 +2,8 @@ from django import forms
 from .models import  Product, Category, ProductImage
 from django.forms import ClearableFileInput
 from account.models import User
+import datetime
+
 
 class ProductForm(forms.ModelForm):
     slug = forms.SlugField(widget=forms.TextInput(attrs={'class': 'form-input'}),required=False)
@@ -52,3 +54,32 @@ class UserForm(forms.ModelForm):
         self.fields['last_name'].widget.attrs['placeholder'] = 'Enter last Name'
         self.fields['phone_number'].widget.attrs['placeholder'] = 'Enter Phone Number'
         self.fields['email'].widget.attrs['placeholder'] = 'Enter Email Address'
+
+
+class DateForm(forms.Form):
+    year_dropdown = []
+    year_dropdown.insert(0, ('', '----'))
+
+    for y in range(2015, (datetime.datetime.now().year + 5)):
+        year_dropdown.append((y, y))
+
+    month_dropdown = ( 
+        ('', '----'),
+        ('1','January'),
+        ('2', 'February'),
+        ('3', 'March'),
+        ('4', 'April'),
+        ('5', 'May'),
+        ('6', 'June'),
+        ('7', 'July'),
+        ('8', 'August'),
+        ('9', 'September'),
+        ('10', 'October'),
+        ('11', 'November'),
+        ('12', 'December'),
+    )
+    year = forms.ChoiceField(choices=year_dropdown, required=False)
+    month = forms.ChoiceField(choices=month_dropdown, required=False)
+
+    class Meta:
+        fields = ['year', 'month']
