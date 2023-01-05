@@ -30,3 +30,5 @@ urlpatterns = [
     path('', include("coupon.urls")),
     path('', include("admin_dashboard.urls")),
 ]
+
+handler404 = 'home.views.error_404_view'

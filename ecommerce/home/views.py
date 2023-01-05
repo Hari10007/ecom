@@ -9,6 +9,9 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 # Create your views here.
 
+def error_404_view(request, exception):
+    return render(request,'shop/error_404.html')
+
 def homepage(request):  
     kids_category = Category.objects.get(slug="kids-clothing")
     men_category = Category.objects.get(slug="mens-clothing")
