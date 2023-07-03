@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+-#c46-d1!97##0esqdx)v%*nfapvmfq@m8g9un2pgvb+o05@_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -179,13 +179,12 @@ MEDIA_ROOT = BASE_DIR / 'uploads'
 MEDIA_URL = '/media/'
 
 
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' 
-EMAIL_HOST_USER = 'harikrishnansr007@gmail.com' 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587 
-EMAIL_USE_TLS = True 
-EMAIL_HOST_PASSWORD = "sbgdbzrsfifxwvwh"
+EMAIL_BACKEND = env('EMAIL_BACKEND')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER') 
+EMAIL_HOST = env('EMAIL_HOST_USER')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 RAZORPAY_API_KEY = env('RAZORPAY_API_KEY')
 RAZORPAY_SECRET_KEY = env('RAZORPAY_SECRET_KEY')
