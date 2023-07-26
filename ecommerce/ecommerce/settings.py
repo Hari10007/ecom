@@ -10,9 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
-import environ
 from pathlib import Path
+
+import environ
+import dj_database_url
 from django.contrib.messages import constants as messages
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -28,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+-#c46-d1!97##0esqdx)v%*nfapvmfq@m8g9un2pgvb+o05@_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -106,20 +109,27 @@ AUTH_USER_MODEL = 'account.User'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'ecom',
-#         'USER': 'postgres',
-#         'PASSWORD': 'postgres',
-#         'HOST': 'localhost',
+#         'NAME': 'ecom_vxtl',
+#         'USER': 'ecom',
+#         'PASSWORD': 'stlftbahZQKzhDAnrRSai1ZByJgU2qU6',
+#         'HOST': 'postgres://ecom:stlftbahZQKzhDAnrRSai1ZByJgU2qU6@dpg-cihst1lgkuvojjba58m0-a/ecom_vxtl',
 #         'PORT': '5432',
 #     }
 # }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(
+        'postgres://ecom:stlftbahZQKzhDAnrRSai1ZByJgU2qU6@dpg-cihst1lgkuvojjba58m0-a.singapore-postgres.render.com/ecom_vxtl',
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 
@@ -167,7 +177,7 @@ if DEBUG:
         os.path.join(BASE_DIR, 'static')
     ]
 else:
-    STATIC_ROOT= os.path.join(BASE_DIR,'static/')
+    STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
