@@ -39,6 +39,7 @@ psycopg2-binary==2.9.3
 pycparser==2.21
 pyHanko==0.16.0
 pyhanko-certvalidator==0.19.8
+PyJWT==2.8.0
 pyotp==2.7.0
 PyPDF3==1.0.6
 pypiwin32==223
@@ -50,6 +51,7 @@ python-dateutil==2.8.2
 python-dotenv==0.21.0
 pytz==2022.4
 pytz-deprecation-shim==0.1.0.post0
+pywin32==306
 PyYAML==5.3.1
 qrcode==7.3.1
 QtPy==2.3.0
