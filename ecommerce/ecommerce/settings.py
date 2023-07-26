@@ -117,19 +117,19 @@ AUTH_USER_MODEL = 'account.User'
 #     }
 # }
 
-DATABASES = {
-    'default': dj_database_url.parse(
-        'postgres://ecom:stlftbahZQKzhDAnrRSai1ZByJgU2qU6@dpg-cihst1lgkuvojjba58m0-a.singapore-postgres.render.com/ecom_vxtl',
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
+#     'default': dj_database_url.parse(
+#         'postgres://ecom:stlftbahZQKzhDAnrRSai1ZByJgU2qU6@dpg-cihst1lgkuvojjba58m0-a.singapore-postgres.render.com/ecom_vxtl',
+#         conn_max_age=600,
+#         conn_health_checks=True,
+#     )
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 
@@ -177,7 +177,7 @@ if DEBUG:
         os.path.join(BASE_DIR, 'static')
     ]
 else:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
