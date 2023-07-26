@@ -24,6 +24,7 @@ django-phonenumber-field==7.0.0
 djangorestframework==3.14.0
 future==0.16.0
 git-cola==4.1.0
+gunicorn==21.2.0
 html5lib==1.1
 idna==3.4
 jmespath==0.10.0
