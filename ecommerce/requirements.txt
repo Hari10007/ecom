@@ -39,7 +39,6 @@ psycopg2-binary==2.9.3
 pycparser==2.21
 pyHanko==0.16.0
 pyhanko-certvalidator==0.19.8
-PyJWT==2.5.0
 pyotp==2.7.0
 PyPDF3==1.0.6
 pypiwin32==223
